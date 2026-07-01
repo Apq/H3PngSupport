@@ -23,6 +23,7 @@ BEGIN
             VALUE "FileDescription", "英雄无敌3(SOD)PNG图片支持插件\0"
             VALUE "FileVersion", "0.1.2026.701\0"
             VALUE "InternalName", "PngSupport\0"
+            VALUE "LegalCopyright", "Copyright (C) Apq\0"
             VALUE "OriginalFilename", "PngSupport.dll\0"
             VALUE "ProductName", "PngSupport\0"
             VALUE "ProductVersion", "0.1.2026.701\0"
