@@ -21,6 +21,9 @@
     <Filter Include="ThirdParty\zlib">
       <UniqueIdentifier>{37c8ecc4-8c5d-4360-9731-94dfbdc15280}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{25d82440-8797-4b8e-8d5e-f5a5ac78c6e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PngSupport.cpp"><Filter>Source Files</Filter></ClCompile>
@@ -65,6 +68,9 @@
     <ClInclude Include="..\libpng\pnglibconf.h"><Filter>ThirdParty\libpng</Filter></ClInclude>
     <ClInclude Include="..\zlib\zlib.h"><Filter>ThirdParty\zlib</Filter></ClInclude>
     <ClInclude Include="..\zlib\zconf.h"><Filter>ThirdParty\zlib</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PngSupport.rc"><Filter>Resource Files</Filter></ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="modules\ConfigLog.inc.cpp"><Filter>Modules</Filter></None>

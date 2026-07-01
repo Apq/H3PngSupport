@@ -101,6 +101,9 @@
     <ClInclude Include="..\zlib\zconf.h" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="PngSupport.rc" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="PngSupport.ini" />
     <None Include="modules\ConfigLog.inc.cpp" />
     <None Include="modules\PngSurface.inc.cpp" />

@@ -1,22 +1,13 @@
-$ErrorActionPreference = 'Stop'
-$root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$dll = Join-Path $root 'Release\PngSupport.dll'
-$ini = Join-Path $root 'PngSupport.ini'
+$gameDir = 'D:\Heroes3\Heroes3_2026.05.01'
+$packsDst = "$gameDir\_HD3_Data\Packs\PNG支持"
+# $PSScriptRoot 是 PowerShell 自动变量，表示当前 deploy.ps1 所在目录。
+$src = "$PSScriptRoot\Release"
 
-if (!(Test-Path $dll)) { throw "DLL not found: $dll" }
-
-# 按本机常用路径部署；不存在则只输出构建产物位置。
-$candidates = @(
-  'D:\Games\Heroes3\_HD3_Data\Packs\H3PngSupport',
-  'D:\Games\Heroes3\Mods\H3PngSupport'
-)
-$target = $candidates | Where-Object { Test-Path (Split-Path $_ -Parent) } | Select-Object -First 1
-if ($target) {
-  New-Item -ItemType Directory -Force -Path $target | Out-Null
-  Copy-Item $dll $target -Force
-  if (Test-Path $ini) { Copy-Item $ini $target -Force }
-  Write-Host "Deployed to $target"
-} else {
-  Write-Host "Built: $dll"
-  Write-Host "No known Heroes3 target directory found."
+# --- PngSupport 插件 ---
+if (-not (Test-Path $packsDst)) {
+    New-Item -ItemType Directory -Path $packsDst -Force | Out-Null
 }
+Copy-Item "$src\PngSupport.dll" $packsDst -Force
+Copy-Item "$PSScriptRoot\PngSupport.ini" $packsDst -Force
+
+Write-Host "已部署到 $packsDst"
