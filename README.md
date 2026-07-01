@@ -1,86 +1,63 @@
 # PngSupport
 
-英雄无敌 3 SoD x86 插件：使用 libpng 解码 PNG，维护自有 RGBA surface，并直接绘制到游戏 DirectDraw backbuffer。
+英雄无敌 3 SoD x86 插件：使用 libpng 解码 PNG，创建 DirectDraw 离屏 surface，通过 Blt 绘制到 backbuffer。
 
 ## 定位
 
-PngSupport **不是**修改原版资源系统，也不依赖 `_Pcx16_::DrawSurface16()`。
+PngSupport **不依赖** `_Pcx8_`/`_Pcx16_` 体系，也不调用被 HD_TC2 hook 的游戏绘制函数。
 
-它做的是：
+渲染管线：
 
-```text
-PNG 文件
-  -> libpng 解码为 RGBA surface
-  -> PngSupport 自己 Lock DirectDraw backbuffer
-  -> 根据 backbuffer 像素格式写入 RGB565/RGB555/32-bit 像素
-  -> Unlock backbuffer
+```
+PNG 文件 → libpng 解码 RGBA8
+  → o_DD->CreateSurface() 创建离屏 DD surface
+  → Lock surface，按实际像素格式（16/24/32-bit）写入
+  → o_DDSurfaceBackBuffer->Blt() 绘制到后备缓冲区
 ```
 
-最终显示仍必须进入游戏的 DirectDraw backbuffer，这是“显示到游戏画面”无法绕开的目标；但中间不再依赖 HoMM3 的 `_Pcx16_` 绘制接口。
+## 为什么用离屏 surface + Blt？
 
-## 命名
+HD_TC2 hook 了 `_Pcx8_::DrawToPcx16`（0x44FA80），自定义 `_Pcx8_` 对象会崩溃。
+直接写 `screen_pcx16->buffer` 也会因 HD_TC2 渲染管线覆盖而颜色/位置错乱。
 
-- 目录名：`H3PngSupport`
-- 解决方案名：`PngSupport`
-- 项目名：`PngSupport`
-- DLL 名：`PngSupport.dll`
+DirectDraw Blt 是原生硬件加速操作，HD_TC2 不干预，颜色和位置都正确。
+详见 `H3BattleValueInfo/背景图渲染方案.md`。
 
-## 源码依赖
+## 导出 API（API version 3）
 
-本项目直接编译相邻目录中的源码，不依赖预编译 `.lib` / `.dll`：
+| 函数 | 说明 |
+|------|------|
+| `PngSupport_GetApiVersion()` | 返回 `3` |
+| `PngSupport_GetName()` | 返回 `"PngSupport(libpng+DDOffscreen)"` |
+| `PngSupport_LoadPng(const char* path)` | 加载 PNG，创建离屏 DD surface，返回 `PngSupportSurface*` |
+| `PngSupport_Free(PngSupportSurface*)` | 释放 surface 及 DD 资源 |
+| `PngSupport_DrawToBackBuffer(surface, src_x, src_y, w, h, dst_x, dst_y, alpha_mode)` | Blt 到 backbuffer |
+| `PngSupport_DrawToBackBufferFull(surface, dst_x, dst_y, alpha_mode)` | 整图 Blt |
 
-```text
-D:/GitHub/H3/libpng
-D:/GitHub/H3/zlib
-```
-
-工程 include 路径：
-
-```text
-$(ProjectDir)..\libpng
-$(ProjectDir)..\zlib
-```
-
-工程会直接编译 libpng/zlib 的 `.c` 文件，最终能力静态包含在 `PngSupport.dll` 里。
-
-注意：libpng 源码目录需要存在：
-
-```text
-libpng/pnglibconf.h
-```
-
-如果只有 `pnglibconf.h.prebuilt`，可复制一份命名为 `pnglibconf.h`。
-
-## 导出 API
+### PngSupportSurface 结构
 
 ```cpp
-struct PngSupportSurface
-{
+struct PngSupportSurface {
+    LPDIRECTDRAWSURFACE dd_surface;  // DirectDraw 离屏 surface
     int width;
     int height;
-    int stride_bytes;
-    unsigned char* rgba;
 };
-
-extern "C" __declspec(dllimport) int __stdcall PngSupport_GetApiVersion();
-extern "C" __declspec(dllimport) const char* __stdcall PngSupport_GetName();
-extern "C" __declspec(dllimport) PngSupportSurface* __stdcall PngSupport_LoadPng(const char* path);
-extern "C" __declspec(dllimport) void __stdcall PngSupport_Free(PngSupportSurface* surface);
-extern "C" __declspec(dllimport) int __stdcall PngSupport_DrawToBackBuffer(PngSupportSurface* surface, int src_x, int src_y, int width, int height, int dst_x, int dst_y, int alpha_mode);
-extern "C" __declspec(dllimport) int __stdcall PngSupport_DrawToBackBufferFull(PngSupportSurface* surface, int dst_x, int dst_y, int alpha_mode);
 ```
 
-## alpha_mode
+### alpha_mode
 
-```text
-0 = 忽略 alpha，整张图不透明绘制
-1 = 使用 PNG alpha，支持透明和半透明混合
+- `0` = 不透明绘制（默认）
+- `1` = 预留（当前实现等同 0，DD Blt 不支持逐像素 alpha）
+
+## 依赖
+
+- libpng + zlib 源码直接编译进 DLL（`D:\GitHub\H3\libpng`、`D:\GitHub\H3\zlib`）
+- 不需要额外的 libpng/zlib DLL
+
+## 部署
+
+```powershell
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File deploy.ps1
 ```
 
-## 当前实现
-
-- 使用 libpng 解码 PNG。
-- surface 内部保留 RGBA，不提前转为 `_Pcx16_`。
-- 绘制时 Lock `o_DDSurfaceBackBuffer`。
-- 支持常见 16-bit RGB565、16-bit RGB555、32-bit mask 打包。
-- 不再调用 `_Pcx16_::DrawSurface16()`。
+目标：`D:\Heroes3\Heroes3_2026.05.01\_HD3_Data\Packs\PNG支持`

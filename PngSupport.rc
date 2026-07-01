@@ -27,7 +27,7 @@ BEGIN
             VALUE "OriginalFilename", "PngSupport.dll\0"
             VALUE "ProductName", "PngSupport\0"
             VALUE "ProductVersion", "0.1.2026.701\0"
-            VALUE "Comments", "使用libpng解码PNG为RGBA，并直接绘制到游戏DirectDraw后备缓冲区，不依赖_Pcx16_绘制接口\0"
+            VALUE "Comments", "使用libpng解码PNG，创建DirectDraw离屏surface，通过Blt绘制到后备缓冲区，兼容HD_TC2\0"
         END
     END
     BLOCK "VarFileInfo"
