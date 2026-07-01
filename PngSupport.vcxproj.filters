@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{0f888e7d-141f-46b5-94b9-bbb897fa0c11}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{44aa7561-7fb3-4c3d-a10b-61bbdc39f3c5}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{af0b647e-5f0e-4f46-8af4-3814415c3537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Deps">
+      <UniqueIdentifier>{32189523-99c3-4ec3-87ec-cf45e637b6ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\libpng">
+      <UniqueIdentifier>{8d512631-c344-421a-929e-e870bc0fab8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\zlib">
+      <UniqueIdentifier>{37c8ecc4-8c5d-4360-9731-94dfbdc15280}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="PngSupport.cpp"><Filter>Source Files</Filter></ClCompile>
+    <ClCompile Include="deps\HoMM3_GUI.cpp"><Filter>Deps</Filter></ClCompile>
+    <ClCompile Include="deps\HoMM3_Res.cpp"><Filter>Deps</Filter></ClCompile>
+    <ClCompile Include="..\libpng\png.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngerror.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngget.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngmem.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngpread.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngread.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngrio.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngrtran.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngrutil.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngset.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngtrans.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngsimd.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngwrite.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngwutil.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngwio.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\libpng\pngwtran.c"><Filter>ThirdParty\libpng</Filter></ClCompile>
+    <ClCompile Include="..\zlib\adler32.c"><Filter>ThirdParty\zlib</Filter></ClCompile>
+    <ClCompile Include="..\zlib\compress.c"><Filter>ThirdParty\zlib</Filter></ClCompile>
+    <ClCompile Include="..\zlib\crc32.c"><Filter>ThirdParty\zlib</Filter></ClCompile>
+    <ClCompile Include="..\zlib\deflate.c"><Filter>ThirdParty\zlib</Filter></ClCompile>
+    <ClCompile Include="..\zlib\infback.c"><Filter>ThirdParty\zlib</Filter></ClCompile>
+    <ClCompile Include="..\zlib\inffast.c"><Filter>ThirdParty\zlib</Filter></ClCompile>
+    <ClCompile Include="..\zlib\inflate.c"><Filter>ThirdParty\zlib</Filter></ClCompile>
+    <ClCompile Include="..\zlib\inftrees.c"><Filter>ThirdParty\zlib</Filter></ClCompile>
+    <ClCompile Include="..\zlib\trees.c"><Filter>ThirdParty\zlib</Filter></ClCompile>
+    <ClCompile Include="..\zlib\uncompr.c"><Filter>ThirdParty\zlib</Filter></ClCompile>
+    <ClCompile Include="..\zlib\zutil.c"><Filter>ThirdParty\zlib</Filter></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="deps\homm3.h"><Filter>Deps</Filter></ClInclude>
+    <ClInclude Include="deps\patcher_x86.hpp"><Filter>Deps</Filter></ClInclude>
+    <ClInclude Include="deps\HoMM3_Base.h"><Filter>Deps</Filter></ClInclude>
+    <ClInclude Include="deps\HoMM3_GUI.h"><Filter>Deps</Filter></ClInclude>
+    <ClInclude Include="deps\resource.h"><Filter>Deps</Filter></ClInclude>
+    <ClInclude Include="..\libpng\png.h"><Filter>ThirdParty\libpng</Filter></ClInclude>
+    <ClInclude Include="..\libpng\pngconf.h"><Filter>ThirdParty\libpng</Filter></ClInclude>
+    <ClInclude Include="..\libpng\pnglibconf.h"><Filter>ThirdParty\libpng</Filter></ClInclude>
+    <ClInclude Include="..\zlib\zlib.h"><Filter>ThirdParty\zlib</Filter></ClInclude>
+    <ClInclude Include="..\zlib\zconf.h"><Filter>ThirdParty\zlib</Filter></ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="modules\ConfigLog.inc.cpp"><Filter>Modules</Filter></None>
+    <None Include="modules\PngSurface.inc.cpp"><Filter>Modules</Filter></None>
+    <None Include="modules\Entry.inc.cpp"><Filter>Modules</Filter></None>
+    <None Include="PngSupport.ini" />
+    <None Include="README.md" />
+    <None Include="deploy.bat" />
+    <None Include="deploy.ps1" />
+  </ItemGroup>
+</Project>
