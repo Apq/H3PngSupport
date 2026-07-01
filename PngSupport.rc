@@ -1,0 +1,36 @@
+#pragma code_page(65001)
+#include <windows.h>
+#include "deps/resource.h"
+
+IDR_VERSIONINFO VERSIONINFO
+ FILEVERSION 0,1,2026,701
+ PRODUCTVERSION 0,1,2026,701
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "LobsterAI\0"
+            VALUE "FileDescription", "英雄无敌3(SOD)PNG图片支持插件\0"
+            VALUE "FileVersion", "0.1.2026.701\0"
+            VALUE "InternalName", "PngSupport\0"
+            VALUE "OriginalFilename", "PngSupport.dll\0"
+            VALUE "ProductName", "PngSupport\0"
+            VALUE "ProductVersion", "0.1.2026.701\0"
+            VALUE "Comments", "使用libpng解码PNG为RGBA，并直接绘制到游戏DirectDraw后备缓冲区，不依赖_Pcx16_绘制接口\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END
