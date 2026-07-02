@@ -40,7 +40,7 @@
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <StructMemberAlignment>1Byte</StructMemberAlignment>
@@ -58,8 +58,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="PngSupport.cpp" />
-    <ClCompile Include="deps\HoMM3_GUI.cpp" />
-    <ClCompile Include="deps\HoMM3_Res.cpp" />
     <ClCompile Include="..\libpng\png.c" />
     <ClCompile Include="..\libpng\pngerror.c" />
     <ClCompile Include="..\libpng\pngget.c" />
@@ -89,10 +87,7 @@
     <ClCompile Include="..\zlib\zutil.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="deps\homm3.h" />
-    <ClInclude Include="deps\patcher_x86.hpp" />
-    <ClInclude Include="deps\HoMM3_Base.h" />
-    <ClInclude Include="deps\HoMM3_GUI.h" />
+    <ClInclude Include="deps\H3API.hpp" />
     <ClInclude Include="deps\resource.h" />
     <ClInclude Include="..\libpng\png.h" />
     <ClInclude Include="..\libpng\pngconf.h" />
