@@ -15,6 +15,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID reserved)
         GetModuleFileNameA(hModule, g_ini_path, MAX_PATH);
         char* dot = strrchr(g_ini_path, '.');
         if (dot) strcpy(dot, ".ini");
+        g_disable_log = ReadDisableLogFromIniFileA(g_ini_path);
         SetupDatedLogPathAndCleanup(hModule);
         WriteLog("PngSupport 正在加载。");
 

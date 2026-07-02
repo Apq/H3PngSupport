@@ -4,6 +4,7 @@ static char g_ini_path[MAX_PATH];
 static char g_log_path[MAX_PATH];
 static wchar_t g_log_path_w[MAX_PATH * 2];
 static HMODULE g_hModule = nullptr;
+static bool g_disable_log = false;
 
 static const int MAX_LOG_FILES_TO_KEEP = 30;
 static const int MAX_LOG_FILES_TO_SCAN = 1024;
@@ -20,6 +21,77 @@ static int __cdecl CompareLogFileEntryW(const void* a, const void* b)
     int cmp = CompareFileTime(&la->last_write, &lb->last_write);
     if (cmp != 0) return cmp;
     return _wcsicmp(la->path, lb->path);
+}
+
+static char* TrimAscii(char* s)
+{
+    if (!s) return s;
+    if ((unsigned char)s[0] == 0xEF && (unsigned char)s[1] == 0xBB && (unsigned char)s[2] == 0xBF)
+        s += 3;
+    while (*s == ' ' || *s == '\t') ++s;
+
+    char* end = s + strlen(s);
+    while (end > s && (end[-1] == ' ' || end[-1] == '\t' || end[-1] == '\r' || end[-1] == '\n'))
+        *--end = 0;
+    return s;
+}
+
+static bool ReadDisableLogFromIniFileA(const char* ini_path)
+{
+    if (!ini_path || !ini_path[0]) return false;
+
+    HANDLE file = CreateFileA(ini_path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+        nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (file == INVALID_HANDLE_VALUE)
+        return false;
+
+    char buf[4097];
+    DWORD bytes_read = 0;
+    BOOL ok = ReadFile(file, buf, sizeof(buf) - 1, &bytes_read, nullptr);
+    CloseHandle(file);
+    if (!ok || bytes_read == 0)
+        return false;
+    buf[bytes_read] = 0;
+
+    bool in_logging = false;
+    char* p = buf;
+    while (*p) {
+        char* line = p;
+        while (*p && *p != '\r' && *p != '\n') ++p;
+        if (*p) {
+            *p++ = 0;
+            if (p[-1] == '\r' && *p == '\n') ++p;
+        }
+
+        char* s = TrimAscii(line);
+        if (!s || !*s || *s == ';' || *s == '#')
+            continue;
+
+        if (*s == '[') {
+            char* close = strchr(s, ']');
+            if (!close) {
+                in_logging = false;
+                continue;
+            }
+            *close = 0;
+            char* section = TrimAscii(s + 1);
+            in_logging = section && _stricmp(section, "Logging") == 0;
+            continue;
+        }
+
+        if (!in_logging)
+            continue;
+
+        char* eq = strchr(s, '=');
+        if (!eq) continue;
+        *eq = 0;
+        char* key = TrimAscii(s);
+        char* value = TrimAscii(eq + 1);
+        if (key && value && _stricmp(key, "DisableLog") == 0)
+            return atoi(value) != 0;
+    }
+
+    return false;
 }
 
 static void CleanupOldLogFilesW(const wchar_t* log_dir, const wchar_t* log_base, const wchar_t* current_log_path)
@@ -59,6 +131,12 @@ static void CleanupOldLogFilesW(const wchar_t* log_dir, const wchar_t* log_base,
 
 static void SetupDatedLogPathAndCleanup(HMODULE hModule)
 {
+    if (g_disable_log) {
+        g_log_path[0] = 0;
+        g_log_path_w[0] = 0;
+        return;
+    }
+
     wchar_t module_path[MAX_PATH * 2] = { 0 };
     GetModuleFileNameW(hModule, module_path, _countof(module_path));
 
@@ -91,6 +169,7 @@ static void SetupDatedLogPathAndCleanup(HMODULE hModule)
 
 static void WriteLog(const char* fmt, ...)
 {
+    if (g_disable_log) return;
     if (!g_log_path[0]) return;
 
     FILE* f = nullptr;

@@ -148,6 +148,17 @@ struct PngSupportSurface { void* dd_surface; int width; int height; };
 // 但不应修改任何字段。
 ```
 
+## 配置
+
+`PngSupport.ini` 支持日志开关：
+
+```ini
+[Logging]
+; 0 = 不禁止，正常写日志并保留最近 30 个（默认）
+; 1 = 禁止，不生成日志，也不扫描/清理旧日志
+DisableLog=0
+```
+
 ## 依赖
 
 - libpng + zlib 源码直接编译进 DLL（`D:\GitHub\H3\libpng`、`D:\GitHub\H3\zlib`）
