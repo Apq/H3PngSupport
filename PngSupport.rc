@@ -32,7 +32,7 @@ BEGIN
         BEGIN
             VALUE "Comments", "支持PNG图片"
             VALUE "CompanyName", "Apq"
-            VALUE "FileDescription", "HoMM3 HD Mod PNG Support"
+            VALUE "FileDescription", "支持PNG图片"
             VALUE "FileVersion", "0.1.2026.703"
             VALUE "InternalName", "PngSupport"
             VALUE "LegalCopyright", "Copyright (C) Apq"

@@ -88,7 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="deps\H3API.hpp" />
-    <ClInclude Include="deps\resource.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="..\libpng\png.h" />
     <ClInclude Include="..\libpng\pngconf.h" />
     <ClInclude Include="..\libpng\pnglibconf.h" />
