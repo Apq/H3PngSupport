@@ -1,10 +1,21 @@
-#pragma code_page(65001)
-#include <windows.h>
-#include "deps/resource.h"
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+/////////////////////////////////////////////////////////////////////////////
+// 中文(简体，中国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
 
 IDR_VERSIONINFO VERSIONINFO
- FILEVERSION 0,1,2026,701
- PRODUCTVERSION 0,1,2026,701
+ FILEVERSION 0,1,2026,703
+ PRODUCTVERSION 0,1,2026,703
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -17,21 +28,62 @@ IDR_VERSIONINFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904b0"
+        BLOCK "080404b0"
         BEGIN
-            VALUE "CompanyName", "LobsterAI\0"
-            VALUE "FileDescription", "鑻遍泟鏃犳晫3(SOD)PNG鍥剧墖鏀寔鎻掍欢\0"
-            VALUE "FileVersion", "0.1.2026.701\0"
-            VALUE "InternalName", "PngSupport\0"
-            VALUE "LegalCopyright", "Copyright (C) Apq\0"
-            VALUE "OriginalFilename", "PngSupport.dll\0"
-            VALUE "ProductName", "PngSupport\0"
-            VALUE "ProductVersion", "0.1.2026.701\0"
-            VALUE "Comments", "浣跨敤libpng瑙ｇ爜PNG锛屽垱寤篋irectDraw绂诲睆surface锛岄�氳繃Blt缁樺埗鍒板悗澶囩紦鍐插尯锛屽吋瀹笻D_TC2\0"
+            VALUE "Comments", "支持PNG图片"
+            VALUE "CompanyName", "Apq"
+            VALUE "FileDescription", "HoMM3 HD Mod PNG Support"
+            VALUE "FileVersion", "0.1.2026.703"
+            VALUE "InternalName", "PngSupport"
+            VALUE "LegalCopyright", "Copyright (C) Apq"
+            VALUE "OriginalFilename", "PngSupport.dll"
+            VALUE "ProductName", "PngSupport"
+            VALUE "ProductVersion", "0.1.2026.703"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x0409, 1200
+        VALUE "Translation", 0x804, 1200
     END
 END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 中文(简体，中国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
