@@ -1,47 +1,13 @@
-param(
-    [string]$Configuration = 'Release',
-    [string]$Platform = 'Win32',
-    [switch]$Rebuild
-)
-
-$ErrorActionPreference = 'Stop'
-
-$projectName = 'PngSupport'
-$projectFile = Join-Path $PSScriptRoot "$projectName.vcxproj"
-$msbuild = 'C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\Bin\MSBuild.exe'
-
-if (-not (Test-Path $msbuild)) {
-    $cmd = Get-Command MSBuild.exe -ErrorAction SilentlyContinue
-    if ($cmd) {
-        $msbuild = $cmd.Source
-    } else {
-        throw "MSBuild not found: $msbuild"
-    }
-}
-
-if (-not (Test-Path $projectFile)) {
-    throw "Project file not found: $projectFile"
-}
-
-$target = if ($Rebuild) { 'Rebuild' } else { 'Build' }
-$args = @(
-    $projectFile,
-    "/t:$target",
-    "/p:Configuration=$Configuration",
-    "/p:Platform=$Platform",
-    '/m'
-)
-
-Write-Host "Building $projectName ($Configuration|$Platform)..."
-& $msbuild @args
-if ($LASTEXITCODE -ne 0) {
-    exit $LASTEXITCODE
-}
-
-$dll = Join-Path $PSScriptRoot "$Configuration\$projectName.dll"
-if (Test-Path $dll) {
-    Write-Host "Build output: $dll"
-    Get-FileHash $dll -Algorithm MD5 | Format-Table -AutoSize
-} else {
-    Write-Warning "Build finished, but output was not found: $dll"
+﻿$ErrorActionPreference = 'Stop'
+$projDir = $PSScriptRoot
+Push-Location $projDir
+try {
+    & "C:\Program Files\Microsoft Visual Studio\18\Enterprise\MSBuild\Current\Bin\MSBuild.exe" PngSupport.vcxproj /p:Configuration=Release /p:Platform=Win32 /m
+    if ($LASTEXITCODE -ne 0) { Write-Host "编译失败"; exit 1 }
+    Write-Host "编译完成: $projDir\Release\PngSupport.dll"
+} catch {
+    Write-Host "编译错误: $_"
+    exit 1
+} finally {
+    Pop-Location
 }
