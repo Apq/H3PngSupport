@@ -1,4 +1,4 @@
-$gameDir = 'D:\Heroes3\Heroes3_2026.05.01'
+﻿$gameDir = 'D:\Heroes3\Heroes3_2026.10.07'
 $packsDst = "$gameDir\_HD3_Data\Packs\PNG支持"
 # $PSScriptRoot 是 PowerShell 自动变量，表示当前 deploy.ps1 所在目录。
 $src = "$PSScriptRoot\Release"
