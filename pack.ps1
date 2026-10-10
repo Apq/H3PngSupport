@@ -10,16 +10,10 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 Add-Type -AssemblyName System.Text.Encoding.CodePages -ErrorAction SilentlyContinue
 [System.Text.Encoding]::RegisterProvider([System.Text.CodePagesEncodingProvider]::Instance)
 
-if (-not $Source) {
-    $Source = 'D:\Heroes3\Heroes3_2026.10.07\_HD3_Data\Packs\PNG支持'
-}
+# 2026-10-10 用户裁定：打包不再读游戏部署目录；DLL 取项目 Release 构建产物，
+# 配置取仓库源文件。$Source 参数保留只为兼容旧调用，已不参与取材。
 if (-not $OutputDir) {
     $OutputDir = Join-Path $PSScriptRoot 'Release'
-}
-
-$sourcePath = (Resolve-Path -LiteralPath $Source).Path
-if (-not (Test-Path -LiteralPath $sourcePath -PathType Container)) {
-    throw "打包源目录不存在: $sourcePath"
 }
 
 function Get-PackVersion {
@@ -34,13 +28,12 @@ function Get-PackVersion {
     return 'v' + ($parts[0..1] -join '.')
 }
 
-function Test-PackExcluded {
-    param([string]$RelativePath)
-    $name = [System.IO.Path]::GetFileName($RelativePath)
-    if ($name -like '*.log') { return $true }
-    if ($name -like '*.bak*') { return $true }
-    return $false
-}
+# 显式清单只取本插件需要的文件；包内容保持既有清单，不扩为整个 Release 目录；
+# 包内顶层目录沿用原压缩包目录名（PNG支持/）。
+$files = @(
+    @{ Local = Join-Path $PSScriptRoot 'Release\PngSupport.dll'; Entry = 'PNG支持/PngSupport.dll' },
+    @{ Local = Join-Path $PSScriptRoot 'PngSupport.ini';         Entry = 'PNG支持/PngSupport.ini' }
+)
 
 $version = Get-PackVersion
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
@@ -50,24 +43,18 @@ if (Test-Path -LiteralPath $zipPath) {
 }
 
 $included = 0
-$excluded = 0
 $zip = [System.IO.Compression.ZipFile]::Open(
     $zipPath, [System.IO.Compression.ZipArchiveMode]::Create)
 try {
-    $prefix = $sourcePath.TrimEnd('\') + '\'
-    Get-ChildItem -LiteralPath $sourcePath -Recurse -File -Force | ForEach-Object {
-        $relative = $_.FullName.Substring($prefix.Length)
-        if (Test-PackExcluded $relative) {
-            $script:excluded++
-            Write-Host "排除 $relative"
-            return
+    foreach ($file in $files) {
+        if (-not (Test-Path -LiteralPath $file.Local)) {
+            throw "打包文件缺失: $($file.Local)"
         }
-        $entryName = ('PNG支持\' + $relative) -replace '\\', '/'
         [void][System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
-            $zip, $_.FullName, $entryName,
+            $zip, $file.Local, $file.Entry,
             [System.IO.Compression.CompressionLevel]::Optimal)
-        $script:included++
-        Write-Host "加入 $relative"
+        $included++
+        Write-Host "加入 $($file.Entry)"
     }
 } finally {
     $zip.Dispose()
@@ -78,4 +65,4 @@ if ($included -eq 0) {
     throw '没有可打包的文件。'
 }
 
-Write-Host "已打包 $included 个文件，排除 $excluded 个: $zipPath"
+Write-Host "已打包 $included 个文件: $zipPath"
