@@ -1,5 +1,6 @@
 # Build outputs
-Release/
+Release/*
+!Release/*.zip
 Debug/
 *.obj
 *.pdb
@@ -19,4 +20,3 @@ Debug/
 *.swp
 tmp_*
 .vs
-Release
